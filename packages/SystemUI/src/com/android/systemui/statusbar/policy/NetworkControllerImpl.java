@@ -1625,8 +1625,13 @@ public class NetworkControllerImpl extends BroadcastReceiver
             }
         }
 
+        private boolean showActivityIcons() {
+            return Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_SHOW_DATA_ACTIVITY, 0) == 1;
+        }
+
         public int getActivityIconId(boolean connected) {
-            if (connected) {
+            if (connected && showActivityIcons()) {
                 if (mCurrentState.activityIn && mCurrentState.activityOut) {
                     return R.drawable.stat_sys_signal_inout;
                 } else if (mCurrentState.activityIn) {
