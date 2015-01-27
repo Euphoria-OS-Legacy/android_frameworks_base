@@ -251,6 +251,13 @@ public class NetworkControllerImpl extends BroadcastReceiver
         refreshCarrierLabel();
     }
 
+    private boolean showActivityIcons() {
+        boolean shouldShowActivityIcons = Settings.System.getInt(mContext
+            .getContentResolver(), Settings.System.STATUS_BAR_SHOW_DATA_ACTIVITY, 0) == 1;
+        notifyAllListeners();
+        return shouldShowActivityIcons;
+    }
+
     private void notifyMobileDataEnabled(boolean enabled) {
         final int length = mSignalsChangedCallbacks.size();
         for (int i = 0; i < length; i++) {
@@ -1626,7 +1633,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
         }
 
         public int getActivityIconId(boolean connected) {
-            if (connected) {
+            if (connected && showActivityIcons()) {
                 if (mCurrentState.activityIn && mCurrentState.activityOut) {
                     return R.drawable.stat_sys_signal_inout;
                 } else if (mCurrentState.activityIn) {
