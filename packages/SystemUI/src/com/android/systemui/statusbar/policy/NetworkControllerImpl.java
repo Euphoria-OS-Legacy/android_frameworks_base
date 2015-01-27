@@ -251,6 +251,11 @@ public class NetworkControllerImpl extends BroadcastReceiver
         refreshCarrierLabel();
     }
 
+    private boolean showActivityIcons() {
+        return shouldShowActivityIcons = Settings.System.getInt(mContext
+            .getContentResolver(), Settings.System.STATUS_BAR_SHOW_DATA_ACTIVITY, 0) == 1;
+    }
+
     private void notifyMobileDataEnabled(boolean enabled) {
         final int length = mSignalsChangedCallbacks.size();
         for (int i = 0; i < length; i++) {
@@ -323,9 +328,9 @@ public class NetworkControllerImpl extends BroadcastReceiver
         cluster.setIsAirplaneMode(mAirplaneMode, TelephonyIcons.FLIGHT_MODE_ICON,
                 R.string.accessibility_airplane_mode);
         cluster.setNoSims(mHasNoSims);
-        mWifiSignalController.notifyListeners();
+        mWifiSignalController.notifyListeners(showActivityIcons());
         for (MobileSignalController mobileSignalController : mMobileSignalControllers.values()) {
-            mobileSignalController.notifyListeners();
+            mobileSignalController.notifyListeners(showActivityIcons());
         }
     }
 
@@ -337,9 +342,9 @@ public class NetworkControllerImpl extends BroadcastReceiver
         mSignalsChangedCallbacks.add(cb);
         cb.onAirplaneModeChanged(mAirplaneMode);
         cb.onNoSimVisibleChanged(mHasNoSims);
-        mWifiSignalController.notifyListeners();
+        mWifiSignalController.notifyListeners(showActivityIcons());
         for (MobileSignalController mobileSignalController : mMobileSignalControllers.values()) {
-            mobileSignalController.notifyListeners();
+            mobileSignalController.notifyListeners(showActivityIcons());
         }
     }
 
@@ -550,9 +555,9 @@ public class NetworkControllerImpl extends BroadcastReceiver
     private void notifyAllListeners() {
         notifyListeners();
         for (MobileSignalController mobileSignalController : mMobileSignalControllers.values()) {
-            mobileSignalController.notifyListeners();
+            mobileSignalController.notifyListeners(showActivityIcons());
         }
-        mWifiSignalController.notifyListeners();
+        mWifiSignalController.notifyListeners(showActivityIcons());
     }
 
     /**
@@ -752,7 +757,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
                     mDemoWifiState.connected = mDemoWifiState.level >= 0;
                 }
                 mDemoWifiState.enabled = show;
-                mWifiSignalController.notifyListeners();
+                mWifiSignalController.notifyListeners(showActivityIcons());
             }
             String sims = args.getString("sims");
             if (sims != null) {
@@ -814,7 +819,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
                     controller.getState().connected = controller.getState().level >= 0;
                 }
                 controller.getState().enabled = show;
-                controller.notifyListeners();
+                controller.notifyListeners(showActivityIcons());
             }
             refreshCarrierLabel();
         }
@@ -868,7 +873,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
         }
 
         @Override
-        public void notifyListeners() {
+        public void notifyListeners(boolean showActivityIcon) {
             // only show wifi in the cluster if connected or if wifi-only
             boolean wifiVisible = mCurrentState.enabled
                     && (mCurrentState.connected || !mHasMobileData);
@@ -882,10 +887,12 @@ public class NetworkControllerImpl extends BroadcastReceiver
                         ssidPresent && mCurrentState.activityIn,
                         ssidPresent && mCurrentState.activityOut, contentDescription, wifiDesc);
             }
+            int activityIcon = showActivityIcon ? getActivityIconId(ssidPresent)
+                    : R.drawable.stat_sys_signal_none;
             int signalClustersLength = mSignalClusters.size();
             for (int i = 0; i < signalClustersLength; i++) {
                 mSignalClusters.get(i).setWifiIndicators(wifiVisible, getCurrentIconId(),
-                        getActivityIconId(ssidPresent), contentDescription);
+                        activityIcon, contentDescription);
             }
         }
 
@@ -1188,7 +1195,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
         }
 
         @Override
-        public void notifyListeners() {
+        public void notifyListeners(boolean showActivityIcon) {
             MobileIconGroup icons = getIcons();
 
             String contentDescription = getStringIfExists(getContentDescription());
@@ -1214,13 +1221,15 @@ public class NetworkControllerImpl extends BroadcastReceiver
                             icons.mIsWide && qsTypeIcon != 0);
                 }
             }
+            int activityIcon = showActivityIcon ? getActivityIconId(mCurrentState.dataConnected)
+                    : R.drawable.stat_sys_signal_none;
             int typeIcon = showDataIcon ? icons.mDataType : 0;
             int signalClustersLength = mSignalClusters.size();
             for (int i = 0; i < signalClustersLength; i++) {
                 mSignalClusters.get(i).setMobileDataIndicators(
                         mCurrentState.enabled && !mCurrentState.airplaneMode,
                         getCurrentIconId(),
-                        getActivityIconId(mCurrentState.dataConnected),
+                        activityIcon,
                         typeIcon,
                         contentDescription,
                         dataContentDescription,
@@ -1653,7 +1662,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
         public void notifyListenersIfNecessary() {
             if (isDirty()) {
                 saveLastState();
-                notifyListeners();
+                notifyListeners(mCurrentState.showActivityIcon);
                 mNetworkController.refreshCarrierLabel();
             }
         }
@@ -1700,7 +1709,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
          * based on current state, and only need to be called in the scenario where
          * mCurrentState != mLastState.
          */
-        public abstract void notifyListeners();
+        public abstract void notifyListeners(boolean showActivityIcon);
 
         /**
          * Generate a blank T.
@@ -1749,6 +1758,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
             boolean enabled;
             boolean activityIn;
             boolean activityOut;
+            boolean showActivityIcon;
             int level;
             IconGroup iconGroup;
             int inetCondition;
@@ -1765,6 +1775,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
                 inetCondition = state.inetCondition;
                 activityIn = state.activityIn;
                 activityOut = state.activityOut;
+                showActivityIcon = state.showActivityIcon;
                 rssi = state.rssi;
                 time = state.time;
             }
@@ -1788,6 +1799,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
                         .append("iconGroup=").append(iconGroup).append(',')
                         .append("activityIn=").append(activityIn).append(',')
                         .append("activityOut=").append(activityOut).append(',')
+                        .append("showActivityIcon=").append(showActivityIcon).append(',')
                         .append("rssi=").append(rssi).append(',')
                         .append("lastModified=").append(DateFormat.format("MM-dd hh:mm:ss", time));
             }
@@ -1805,6 +1817,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
                         && other.iconGroup == iconGroup
                         && other.activityIn == activityIn
                         && other.activityOut == activityOut
+                        && other.showActivityIcon == showActivityIcon
                         && other.rssi == rssi;
             }
         }
