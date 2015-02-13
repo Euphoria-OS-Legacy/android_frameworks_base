@@ -836,13 +836,6 @@
     <!-- Text which is shown in the notification shade when there are no notifications. [CHAR LIMIT=30] -->
     <string name="empty_shade_text">No notifications</string>
 
-    <!-- Task Manager -->
-    <string name="tasklistview_title">Task Manager</string>
-    <string name="message_switch_fail">Can not switch to this task, because it has no interface.</string>
-    <string name="tasklist_killall">Kill All</string>
-    <string name="tasklist_memory_usage">"Free/Total Memory: [<xliff:g id="number">%s</xliff:g>] / [<xliff:g id="name">%s</xliff:g>]"</string>
-    <string name="message_keep_one_launcher">Should keep at lease one home activity!</string>
-
     <!-- Footer device owned text [CHAR LIMIT=50] -->
     <string name="device_owned_footer">Device may be monitored</string>
 
@@ -920,7 +913,25 @@
 
     <!-- Accessibility string for current zen mode and selected exit condition. A template that simply concatenates existing mode string and the current condition description. [CHAR LIMIT=20] -->
     <string name="zen_mode_and_condition"><xliff:g id="zen_mode" example="Priority interruptions only">%1$s</xliff:g>. <xliff:g id="exit_condition" example="For one hour">%2$s</xliff:g></string>
+<<<<<<< HEAD
+=======
+
+    <!-- Heads up tile -->
+    <string name="quick_settings_heads_up_on">Heads up enabled</string>
+    <string name="quick_settings_heads_up_off">No interruptions</string>
+
+    <!-- Brightness qs tile -->
+    <string name="quick_settings_brightness">Brightness</string>
+
+    <!-- Battery saver qs tile -->
+    <string name="quick_settings_battery_saver">Battery saver</string>
+    <string name="quick_settings_battery_saver_off">Battery saver off</string>
+
+    <!-- Heads up toast -->
+    <string name="heads_up_enabled">Heads up notifications are enabled</string>
+    <string name="heads_up_disabled">Heads up notifications are disabled</string>
 
     <!-- Power Button for Navbar -->
     <string name="navbar_power_button">Power button</string>
+>>>>>>> 4e2d419... Add power button to navbar
 </resources>
