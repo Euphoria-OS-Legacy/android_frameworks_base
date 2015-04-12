@@ -481,7 +481,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.BATTERY_SAVER_MODE_COLOR), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HEADS_UP_NOTIFCATION_DECAY),
+                    Settings.System.HEADS_UP_NOTIFICATION_DECAY),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_TICKER_ENABLED),
@@ -503,10 +503,10 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         public void onChange(boolean selfChange, Uri uri) {
             if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.HEADS_UP_NOTIFCATION_DECAY))) {
+                    Settings.System.HEADS_UP_NOTIFICATION_DECAY))) {
                     mHeadsUpNotificationDecay = Settings.System.getIntForUser(
                             mContext.getContentResolver(),
-                            Settings.System.HEADS_UP_NOTIFCATION_DECAY,
+                            Settings.System.HEADS_UP_NOTIFICATION_DECAY,
                             mContext.getResources().getInteger(
                             R.integer.heads_up_notification_decay),
                             UserHandle.USER_CURRENT);
@@ -1009,7 +1009,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mHeadsUpNotificationView.setBar(this);
             mHeadsUpNotificationDecay = Settings.System.getIntForUser(
                     mContext.getContentResolver(),
-                    Settings.System.HEADS_UP_NOTIFCATION_DECAY,
+                    Settings.System.HEADS_UP_NOTIFICATION_DECAY,
                     res.getInteger(R.integer.heads_up_notification_decay),
                     UserHandle.USER_CURRENT);
         }

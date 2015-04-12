@@ -3725,7 +3725,7 @@ public final class Settings {
          *
          * @hide
          */
-        public static final String HEADS_UP_NOTIFCATION_DECAY = "heads_up_notification_decay";
+        public static final String HEADS_UP_NOTIFICATION_DECAY = "heads_up_notification_decay";
 
         /**
          * Wether to show a headsup enable/disable button in status bar header
@@ -3733,6 +3733,13 @@ public final class Settings {
          * @hide
          */
         public static final String HEADS_UP_SHOW_STATUS_BUTTON = "heads_up_show_status_button";
+
+        /**
+         * Defines the global heads up notification snooze
+         *
+         * @hide
+         */
+        public static final String HEADS_UP_NOTIFICATION_SNOOZE = "heads_up_notification_snooze";
 
         /**  
          * AOKP Custom System Animations
