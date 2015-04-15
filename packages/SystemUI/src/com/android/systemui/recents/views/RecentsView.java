@@ -20,6 +20,7 @@ import android.app.ActivityOptions;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -241,6 +242,10 @@ public class RecentsView extends FrameLayout implements TaskStackView.TaskStackV
         // We have to increment/decrement the post animation trigger in case there are no children
         // to ensure that it runs
         ctx.postAnimationTrigger.increment();
+
+        // Hide clear recents button before return to home
+        startHideClearRecentsButtonAnimation();
+
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
@@ -253,6 +258,25 @@ public class RecentsView extends FrameLayout implements TaskStackView.TaskStackV
 
         // Notify of the exit animation
         mCb.onExitToHomeAnimationTriggered();
+    }
+
+    public void startHideClearRecentsButtonAnimation() {
+        if (mFloatingButton != null) {
+            mFloatingButton.animate()
+                .alpha(0f)
+                .setStartDelay(0)
+                .setUpdateListener(null)
+                .setInterpolator(mConfig.fastOutSlowInInterpolator)
+                .setDuration(mConfig.taskViewRemoveAnimDuration)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        mFloatingButton.setVisibility(View.GONE);
+                        mFloatingButton.setAlpha(1f);
+                    }
+                })
+                .start();
+        }
     }
 
     /** Adds the search bar */
@@ -292,10 +316,10 @@ public class RecentsView extends FrameLayout implements TaskStackView.TaskStackV
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
+        Rect searchBarSpaceBounds = new Rect();
 
         // Get the search bar bounds and measure the search bar layout
         if (mSearchBar != null) {
-            Rect searchBarSpaceBounds = new Rect();
             mConfig.getSearchBarBounds(width, height, mConfig.systemInsets.top, searchBarSpaceBounds);
             mSearchBar.measure(
                     MeasureSpec.makeMeasureSpec(searchBarSpaceBounds.width(), MeasureSpec.EXACTLY),
@@ -316,7 +340,16 @@ public class RecentsView extends FrameLayout implements TaskStackView.TaskStackV
 
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)
                     mFloatingButton.getLayoutParams();
-            params.topMargin = taskStackBounds.top;
+            boolean isLandscape = mContext.getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE;
+            if (mSearchBar == null || isLandscape) {
+                params.topMargin = mContext.getResources().
+                    getDimensionPixelSize(com.android.internal.R.dimen.status_bar_height);
+            } else {
+                params.topMargin = mContext.getResources().
+                    getDimensionPixelSize(com.android.internal.R.dimen.status_bar_height)
+                        + searchBarSpaceBounds.height();
+            }
 
             switch (clearRecentsLocation) {
                 case Constants.DebugFlags.App.RECENTS_CLEAR_ALL_TOP_LEFT:
@@ -384,21 +417,7 @@ public class RecentsView extends FrameLayout implements TaskStackView.TaskStackV
                 }
 
                 if (dismissAll()) {
-                    // Hide clear recents before dismiss all tasks
-                    mFloatingButton.animate()
-                        .alpha(0f)
-                        .setStartDelay(0)
-                        .setUpdateListener(null)
-                        .setInterpolator(mConfig.fastOutSlowInInterpolator)
-                        .setDuration(mConfig.taskViewRemoveAnimDuration)
-                        .withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                mFloatingButton.setVisibility(View.GONE);
-                                mFloatingButton.setAlpha(1f);
-                            }
-                        })
-                        .start();
+                    startHideClearRecentsButtonAnimation();
                 }
 
                 dismissAllTasksAnimated();

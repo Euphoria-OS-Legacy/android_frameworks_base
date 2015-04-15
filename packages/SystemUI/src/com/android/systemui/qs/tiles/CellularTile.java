@@ -37,7 +37,7 @@ import com.android.systemui.statusbar.policy.NetworkController.NetworkSignalChan
 public class CellularTile extends QSTile<QSTile.SignalState> {
     private static final Intent CELLULAR_SETTINGS = new Intent().setComponent(new ComponentName(
             "com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
-    private static final Intent WIRELESS_SETTINGS = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+    private static final Intent MOBILE_NETWORK_SETTINGS = new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS);
 
     private final NetworkController mController;
     private final CellularDetailAdapter mDetailAdapter;
@@ -74,21 +74,30 @@ public class CellularTile extends QSTile<QSTile.SignalState> {
 
     @Override
     protected void handleClick() {
-        if (mController.isMobileDataSupported()) {
-            showDetail(true);
+        boolean enabled = mController.isMobileDataEnabled();
+        if (!enabled) {
+            mController.setMobileDataEnabled(true);
         } else {
-            mHost.startSettingsActivity(CELLULAR_SETTINGS);
+            mController.setMobileDataEnabled(false);
         }
     }
 
     @Override
     protected void handleSecondaryClick() {
-        mHost.startSettingsActivity(new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS));
+        if (mController.isMobileDataSupported()) {
+            showDetail(true);
+        } else {
+            mHost.startSettingsActivity(MOBILE_NETWORK_SETTINGS);
+        }
     }
 
     @Override
     protected void handleLongClick() {
-        mHost.startSettingsActivity(new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS));
+        if (mController.isMobileDataSupported()) {
+            showDetail(true);
+        } else {
+            mHost.startSettingsActivity(MOBILE_NETWORK_SETTINGS);
+        }
     }
 
     @Override
@@ -228,7 +237,7 @@ public class CellularTile extends QSTile<QSTile.SignalState> {
 
         @Override
         public Intent getSettingsIntent() {
-            return CELLULAR_SETTINGS;
+            return MOBILE_NETWORK_SETTINGS;
         }
 
         @Override

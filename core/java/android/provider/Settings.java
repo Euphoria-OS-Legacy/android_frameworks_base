@@ -3796,6 +3796,12 @@ public final class Settings {
         public static final String DOZE_OVERWRITE_VALUE = "doze_overwrite_value";
 
         /**
+         * Duration in for ambient display
+         * @hide
+         */
+        public static final String DOZE_PULSE_DURATION_IN = "doze_pulse_duration_in";
+
+        /**
          * Duration visible for ambient display
          * @hide
          */

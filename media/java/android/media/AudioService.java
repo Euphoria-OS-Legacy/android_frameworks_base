@@ -2333,8 +2333,10 @@ public class AudioService extends IAudioService.Stub {
             }
             int streamType = getActiveStreamType(AudioManager.USE_DEFAULT_STREAM_TYPE);
             int device = getDeviceForStream(streamType);
-            int index = mStreamStates[mStreamVolumeAlias[streamType]].getIndex(device);
-            setStreamVolumeInt(mStreamVolumeAlias[streamType], index, device, true);
+            if (mVolumeKeysDefault != -1) {
+                int index = mStreamStates[mStreamVolumeAlias[streamType]].getIndex(device);
+                setStreamVolumeInt(mStreamVolumeAlias[streamType], index, device, true);
+            }
 
             updateStreamVolumeAlias(true /*updateVolumes*/);
         }
@@ -3490,7 +3492,8 @@ public class AudioService extends IAudioService.Stub {
                             StreamOverride.sDelayMs)) {
                 if (DEBUG_VOL) Log.v(TAG, "getActiveStreamType: Forcing STREAM_NOTIFICATION");
                 return AudioSystem.STREAM_NOTIFICATION;
-            } else if (suggestedStreamType == AudioManager.USE_DEFAULT_STREAM_TYPE) {
+            } else if (suggestedStreamType == AudioManager.USE_DEFAULT_STREAM_TYPE &&
+                           !isAfMusicActiveRecently(StreamOverride.sDelayMs)) {
                 switch (mVolumeKeysDefault) {
                 case AudioSystem.STREAM_DEFAULT:
                     if (DEBUG_VOL)
@@ -3506,13 +3509,15 @@ public class AudioService extends IAudioService.Stub {
                         Log.v(TAG, "getActiveStreamType: Forcing STREAM_NOTIFICATION b/c default setting");
                     return AudioSystem.STREAM_NOTIFICATION;
                 }
-            } else if (isAfMusicActiveRecently(StreamOverride.sDelayMs)) {
-                if (DEBUG_VOL) Log.v(TAG, "getActiveStreamType: forcing STREAM_MUSIC");
+            } else {
+                if (isAfMusicActiveRecently(StreamOverride.sDelayMs)) {
+                    if (DEBUG_VOL) Log.v(TAG, "getActiveStreamType: forcing STREAM_MUSIC");
                     return AudioSystem.STREAM_MUSIC;
                 } else {
                     if (DEBUG_VOL) Log.v(TAG,
                             "getActiveStreamType: using STREAM_NOTIFICATION as default");
                     return AudioSystem.STREAM_NOTIFICATION;
+                }
             }
         }
         if (DEBUG_VOL) Log.v(TAG, "getActiveStreamType: Returning suggested type "
@@ -4657,7 +4662,7 @@ public class AudioService extends IAudioService.Stub {
                 }
                 readDockAudioSettings(mContentResolver);
 
-                mLinkNotificationWithVolume = Settings.System.getInt(mContentResolver,
+                mLinkNotificationWithVolume = Settings.Secure.getInt(mContentResolver,
                         Settings.Secure.VOLUME_LINK_NOTIFICATION, 1) == 1;
                 if (mLinkNotificationWithVolume) {
                     mStreamVolumeAlias[AudioSystem.STREAM_NOTIFICATION] = AudioSystem.STREAM_RING;

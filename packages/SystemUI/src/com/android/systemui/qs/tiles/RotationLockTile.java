@@ -80,7 +80,11 @@ public class RotationLockTile extends QSTile<QSTile.BooleanState> {
 
     @Override
     protected void handleSecondaryClick() {
-        mHost.startSettingsActivity(DISPLAY_SETTINGS);
+        if (!mAdvancedMode) {
+            mHost.startSettingsActivity(DISPLAY_SETTINGS);
+        } else {
+            mHost.startSettingsActivity(DISPLAY_ROTATION_SETTINGS);
+        }
     }
 
     @Override

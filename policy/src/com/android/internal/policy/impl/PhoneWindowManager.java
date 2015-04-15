@@ -3214,32 +3214,34 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
             return 0;
         } else if (keyCode == KeyEvent.KEYCODE_APP_SWITCH) {
-            if (down) {
-                if (mPressOnAppSwitchBehavior == KEY_ACTION_APP_SWITCH
-                        || mLongPressOnAppSwitchBehavior == KEY_ACTION_APP_SWITCH) {
-                    preloadRecentApps();
-                }
-                if (repeatCount == 0) {
-                    mAppSwitchLongPressed = false;
-                } else if (longPress) {
-                    if (!keyguardOn && mLongPressOnAppSwitchBehavior != KEY_ACTION_NOTHING) {
-                        if (mLongPressOnAppSwitchBehavior != KEY_ACTION_APP_SWITCH) {
+            if (!keyguardOn) {
+                if (down) {
+                    if (mPressOnAppSwitchBehavior == KEY_ACTION_APP_SWITCH
+                            || mLongPressOnAppSwitchBehavior == KEY_ACTION_APP_SWITCH) {
+                        preloadRecentApps();
+                    }
+                    if (repeatCount == 0) {
+                        mAppSwitchLongPressed = false;
+                    } else if (longPress) {
+                        if (mLongPressOnAppSwitchBehavior != KEY_ACTION_NOTHING) {
+                            if (mLongPressOnAppSwitchBehavior != KEY_ACTION_APP_SWITCH) {
+                                cancelPreloadRecentApps();
+                            }
+                            performHapticFeedbackLw(null, HapticFeedbackConstants.LONG_PRESS, false);
+                            performKeyAction(mLongPressOnAppSwitchBehavior);
+                            mAppSwitchLongPressed = true;
+                        }
+                    }
+                } else {
+                    if (mAppSwitchLongPressed) {
+                        mAppSwitchLongPressed = false;
+                    } else {
+                        if (mPressOnAppSwitchBehavior != KEY_ACTION_APP_SWITCH) {
                             cancelPreloadRecentApps();
                         }
-                        performHapticFeedbackLw(null, HapticFeedbackConstants.LONG_PRESS, false);
-                        performKeyAction(mLongPressOnAppSwitchBehavior);
-                        mAppSwitchLongPressed = true;
-                    }
-                }
-            } else {
-                if (mAppSwitchLongPressed) {
-                    mAppSwitchLongPressed = false;
-                } else {
-                    if (mPressOnAppSwitchBehavior != KEY_ACTION_APP_SWITCH) {
-                        cancelPreloadRecentApps();
-                    }
-                    if (!canceled) {
-                        performKeyAction(mPressOnAppSwitchBehavior);
+                        if (!canceled) {
+                            performKeyAction(mPressOnAppSwitchBehavior);
+                        }
                     }
                 }
             }
@@ -3714,8 +3716,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 awakenDreams();
                 sendCloseSystemWindows(SYSTEM_DIALOG_REASON_HOME_KEY);
                 hideRecentApps(false, true);
-            } else {
-                // Otherwise, just launch Home
+            } else if (mScreenOnFully) {
+                // check if screen is fully on before going home
+                // to avoid hardware home button wake going home
                 sendCloseSystemWindows(SYSTEM_DIALOG_REASON_HOME_KEY);
                 startDockOrHome();
             }
@@ -4886,8 +4889,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     /** {@inheritDoc} */
     @Override
     public int finishPostLayoutPolicyLw() {
-        if (mWinShowWhenLocked != null &&
-                mWinShowWhenLocked != mTopFullscreenOpaqueWindowState) {
+        if (mWinShowWhenLocked != null && mTopFullscreenOpaqueWindowState != null &&
+                mWinShowWhenLocked.getAppToken() != mTopFullscreenOpaqueWindowState.getAppToken()
+                && isKeyguardLocked()) {
             // A dialog is dismissing the keyguard. Put the wallpaper behind it and hide the
             // fullscreen window.
             // TODO: Make sure FLAG_SHOW_WALLPAPER is restored when dialog is dismissed. Or not.

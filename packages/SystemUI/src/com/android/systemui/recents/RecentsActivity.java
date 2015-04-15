@@ -322,7 +322,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
                         mSearchAppWidgetInfo);
                 Bundle opts = new Bundle();
                 opts.putInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY,
-                        AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN);
+                        AppWidgetProviderInfo.WIDGET_CATEGORY_SEARCHBOX);
                 mSearchAppWidgetHostView.updateAppWidgetOptions(opts);
                 // Set the padding to 0 for this search widget
                 mSearchAppWidgetHostView.setPadding(0, 0, 0, 0);
@@ -583,6 +583,9 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
 
         // Dismiss Recents to the focused Task or Home
         dismissRecentsToFocusedTaskOrHome(true);
+
+        // Hide clear recents button before return to home
+        mRecentsView.startHideClearRecentsButtonAnimation();
     }
 
     /** Called when debug mode is triggered */
@@ -628,6 +631,9 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
     public void onTaskLaunchFailed() {
         // Return to Home
         dismissRecentsToHomeRaw(true);
+
+        // Hide clear recents button before return to home
+        mRecentsView.startHideClearRecentsButtonAnimation();
     }
 
     @Override
