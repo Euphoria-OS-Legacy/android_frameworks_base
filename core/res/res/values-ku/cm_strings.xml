@@ -65,6 +65,7 @@
   <string name="reboot_bootloader">بووتلەودەر</string>
   <string name="reboot_download">داگرتن</string>
   <string name="reboot_soft">کارپێکردنه‌وه‌ی قوڵ</string>
+  <string name="reboot_title">ئیشپێکردنەوە</string>
   <string name="reboot_confirm" product="tablet">سه‌رله‌نوێ خستنه‌ڕێ دەبێت.</string>
   <string name="reboot_confirm" product="default">تەلەفۆنەکە سه‌رله‌نوێ ده‌کوژێته‌وه‌ و داده‌گیرسێته‌وه‌.</string>
   <string name="reboot_progress">سه‌رله‌نوێ خستنه‌ڕێ\u2026</string>
@@ -113,12 +114,6 @@
   <string name="app_ops_write_sms">نوسینی نامەی SMS</string>
   <string name="progress_nomediapresent" product="default">ناتوانرێت بسڕێته‌وه‌ میدیا\u2026</string>
   <string name="storage_uicc">UICC بیرگه‌ی</string>
-  <string name="stk_cc_ussd_to_dial">USSDداواکه‌ لابراوه‌ بۆ لێدانی داواکردن.</string>
-  <string name="stk_cc_ussd_to_ss">USSDداواکه‌ لابراوه‌ بۆ لێدانی داواکردنss.</string>
-  <string name="stk_cc_ussd_to_ussd">USSDداواکه‌ لابراوه‌ بۆ لێدانی داواکردنssd.</string>
-  <string name="stk_cc_ss_to_dial">داواکاری گۆڕینی SS بۆ لێدان.</string>
-  <string name="stk_cc_ss_to_ussd">داواکاری گۆڕینی SS بۆ لێدانی USSD.</string>
-  <string name="stk_cc_ss_to_ss">داواکاری گۆڕینی SS بۆ SS نوێ.</string>
   <string name="perf_profile_pwrsv">پاراستنی هێز</string>
   <string name="perf_profile_bal">باڵانسکرا</string>
   <string name="perf_profile_perf">ئەنجامدان</string>

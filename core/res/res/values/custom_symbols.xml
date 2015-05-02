@@ -84,4 +84,8 @@
 
    <!-- Doze Settings -->
   <java-symbol type="bool" name="config_dozeUseAccelerometer" />
+
+  <!-- global actions -->
+  <java-symbol type="id" name="option4" />
+  <java-symbol type="id" name="option5" />
 </resources>

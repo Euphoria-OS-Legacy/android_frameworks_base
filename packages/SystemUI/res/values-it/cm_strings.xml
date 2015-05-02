@@ -36,7 +36,7 @@
   <string name="quick_settings_apn_switch_label">Cambio APN</string>
   <string name="quick_settings_dds_sub">Dati mobili SIM <xliff:g id="number">%d</xliff:g></string>
   <string name="quick_settings_data_off">Dati mobili OFF</string>
-  <string name="quick_settings_location_detail_title">Modalità geolocalizzazione</string>
+  <string name="quick_settings_location_detail_title">Geolocalizzazione</string>
   <string name="quick_settings_location_battery_saving_label">Risparmio batteria</string>
   <string name="quick_settings_location_gps_only_label">Solo dispositivo</string>
   <string name="quick_settings_location_high_accuracy_label">Alta precisione</string>
@@ -50,6 +50,7 @@
   <string name="quick_settings_network_adb_label">ADB attraverso la rete</string>
   <string name="quick_settings_lte_label">LTE</string>
   <string name="quick_settings_screen_timeout_detail_title">Sospensione schermo</string>
+  <string name="quick_settings_usb_tether_label">Tethering USB</string>
   <string name="status_bar_expanded_header_weather_format"><xliff:g id="temp">%1$s</xliff:g> - <xliff:g id="condition">%2$s</xliff:g></string>
   <string name="left_shortcut_hint">Scorri a destra per %1$s</string>
   <string name="right_shortcut_hint">Scorri a sinistra per %1$s</string>

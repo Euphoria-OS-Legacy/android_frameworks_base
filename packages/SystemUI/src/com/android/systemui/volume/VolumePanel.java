@@ -49,6 +49,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.provider.Settings;
+import android.provider.Settings.Global;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.KeyEvent;
@@ -899,7 +900,13 @@ public class VolumePanel extends Handler implements DemoMode {
         if (isNotificationOrRing(sc.streamType)) {
             suppressor = mNotificationEffectsSuppressor;
             int ringerMode = mAudioManager.getRingerModeInternal();
-            muted = ringerMode == AudioManager.RINGER_MODE_SILENT;
+            int zenMode = Global.getInt(mContext.getContentResolver(),
+                    Global.ZEN_MODE, Global.ZEN_MODE_OFF);
+            if (zenMode == Global.ZEN_MODE_NO_INTERRUPTIONS) {
+                muted = false;
+            } else {
+                muted = ringerMode == AudioManager.RINGER_MODE_SILENT;
+            }
             if (mHasVibrator) {
                 vibrate = ringerMode == AudioManager.RINGER_MODE_VIBRATE;
             }
@@ -972,6 +979,8 @@ public class VolumePanel extends Handler implements DemoMode {
             // the state of the phone.
             sc.seekbarView.setEnabled(!fixedVolume);
         } else if (isRinger && mNotificationEffectsSuppressor != null) {
+            sc.icon.setEnabled(true);
+            sc.icon.setAlpha(1f);
             sc.icon.setClickable(false);
         } else if (isRinger
                 && mAudioManager.getRingerModeInternal() == AudioManager.RINGER_MODE_SILENT) {
@@ -981,9 +990,15 @@ public class VolumePanel extends Handler implements DemoMode {
                 (sc.streamType != mAudioManager.getMasterStreamType() && !isRinger && muted) ||
                 (sSafetyWarning != null)) {
             sc.seekbarView.setEnabled(false);
+            if (!mVolumeLinkNotification && sc.streamType == AudioManager.STREAM_NOTIFICATION) {
+                sc.icon.setEnabled(false);
+                sc.icon.setAlpha(mDisabledAlpha);
+            }
             sc.icon.setClickable(true);
         } else {
             sc.seekbarView.setEnabled(true);
+            sc.icon.setEnabled(true);
+            sc.icon.setAlpha(1f);
             sc.icon.setClickable(true);
         }
         // show the silent hint when the disabled slider is touched in silent mode

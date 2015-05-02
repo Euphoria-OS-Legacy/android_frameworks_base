@@ -52,12 +52,6 @@
     <java-symbol type="string" name="reboot_confirm" />
     <java-symbol type="string" name="reboot_title" />
     <java-symbol type="string" name="reboot_progress" />
-    <java-symbol type="string" name="stk_cc_ss_to_dial" />
-    <java-symbol type="string" name="stk_cc_ss_to_ss" />
-    <java-symbol type="string" name="stk_cc_ss_to_ussd" />
-    <java-symbol type="string" name="stk_cc_ussd_to_dial" />
-    <java-symbol type="string" name="stk_cc_ussd_to_ss" />
-    <java-symbol type="string" name="stk_cc_ussd_to_ussd" />
 
     <java-symbol type="layout" name="permission_confirmation_dialog" />
 
@@ -231,10 +225,6 @@
     <java-symbol type="string" name="global_action_current_user" />
     <java-symbol type="dimen" name="global_actions_avatar_size" />
 
-    <!-- First boot install dialog -->
-    <java-symbol type="string" name="android_installing_apk" />
-    <java-symbol type="string" name="android_installing_title" />
-
     <!-- Theme reset notification -->
     <java-symbol type="string" name="theme_reset_notification_title" />
     <java-symbol type="string" name="theme_reset_notification_body" />
@@ -304,6 +294,10 @@
     <java-symbol type="string" name="usb_ext_media_unmountable_notification_message" />
     <java-symbol type="string" name="usb_ext_media_unmountable_notification_title" />
 
+    <!-- Automatic display brightness settings -->
+    <java-symbol type="integer" name="config_brighteningLightDebounce" />
+    <java-symbol type="integer" name="config_darkeningLightDebounce" />
+
     <!-- LiveDisplay -->
     <java-symbol type="string" name="live_display_title" />
     <java-symbol type="string" name="live_display_hint" />
@@ -326,4 +320,16 @@
 
     <!-- Advanced settings switch -->
     <java-symbol type="bool" name="config_advancedSettingsMode" />
+
+    <java-symbol type="string" name="lock_to_app_toast_no_navbar" />
+
+    <!-- KillSwitch -->
+    <java-symbol type="array" name="config_packagesAllowedAccessToKillSwitch" />
+    <java-symbol type="string" name="config_killSwitchLib" />
+    <java-symbol type="string" name="config_killSwitchClass" />
+
+    <!-- Flashlight notification -->
+    <java-symbol type="string" name="quick_settings_tile_flashlight_not_title" />
+    <java-symbol type="string" name="quick_settings_tile_flashlight_not_summary" />
+    <java-symbol type="drawable" name="ic_signal_flashlight_disable" />
 </resources>
