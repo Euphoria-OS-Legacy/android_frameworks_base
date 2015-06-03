@@ -60,6 +60,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ThemeUtils;
 import android.content.res.CompatibilityInfo;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
@@ -319,6 +320,12 @@ public class WindowManagerService extends IWindowManager.Stub
 
     private final int mSfHwRotation;
 
+    private BroadcastReceiver mThemeChangeReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            mUiContext = null;
+        }
+    };
+
     final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -342,6 +349,8 @@ public class WindowManagerService extends IWindowManager.Stub
     int[] mCurrentProfileIds = new int[] {UserHandle.USER_OWNER};
 
     final Context mContext;
+
+    private Context mUiContext;
 
     final boolean mHaveInputMethods;
 
@@ -946,9 +955,17 @@ public class WindowManagerService extends IWindowManager.Stub
 
         // Load hardware rotation from prop
         mSfHwRotation = android.os.SystemProperties.getInt("ro.sf.hwrotation",0) / 90;
-
+        ThemeUtils.registerThemeChangeReceiver(mContext, mThemeChangeReceiver);
         updateCircularDisplayMaskIfNeeded();
         showEmulatorDisplayOverlayIfNeeded();
+    }
+
+    private Context getUiContext() {
+        if (mUiContext == null) {
+            mUiContext = ThemeUtils.createUiContext(mContext);
+            mUiContext.setTheme(android.R.style.Theme_DeviceDefault_Light_DarkActionBar);
+        }
+        return mUiContext != null ? mUiContext : mContext;
     }
 
     public InputMonitor getInputMonitor() {
@@ -4773,7 +4790,8 @@ public class WindowManagerService extends IWindowManager.Stub
                 WindowState w = wtoken.allAppWindows.get(i);
                 if (w.mAppFreezing) {
                     w.mAppFreezing = false;
-                    if (w.mHasSurface && !w.mOrientationChanging) {
+                    if (w.mHasSurface && !w.mOrientationChanging
+                            && mWindowsFreezingScreen != WINDOWS_FREEZING_SCREENS_TIMEOUT) {
                         if (DEBUG_ORIENTATION) Slog.v(TAG, "set mOrientationChanging of " + w);
                         w.mOrientationChanging = true;
                         mInnerFields.mOrientationChangeComplete = false;
@@ -5730,13 +5748,19 @@ public class WindowManagerService extends IWindowManager.Stub
     // Called by window manager policy.  Not exposed externally.
     @Override
     public void shutdown(boolean confirm) {
-        ShutdownThread.shutdown(mContext, confirm);
+        ShutdownThread.shutdown(getUiContext(), confirm);
     }
 
     // Called by window manager policy.  Not exposed externally.
     @Override
     public void rebootSafeMode(boolean confirm) {
-        ShutdownThread.rebootSafeMode(mContext, confirm);
+        ShutdownThread.rebootSafeMode(getUiContext(), confirm);
+    }
+
+    // Called by window manager policy.  Not exposed externally.
+    @Override
+    public void reboot() {
+        ShutdownThread.reboot(getUiContext(), null, true);
     }
 
     public void setCurrentProfileIds(final int[] currentProfileIds) {
@@ -6330,6 +6354,10 @@ public class WindowManagerService extends IWindowManager.Stub
                     if (ws.mAppToken != null && ws.mAppToken.token == appToken &&
                             ws.isDisplayedLw() && winAnim.mSurfaceShown) {
                         screenshotReady = true;
+                    }
+
+                    if (ws.isFullscreen(dw, dh) && ws.isOpaqueDrawn()){
+                        break;
                     }
                 }
 
@@ -9191,7 +9219,7 @@ public class WindowManagerService extends IWindowManager.Stub
         // If the screen is currently frozen or off, then keep
         // it frozen/off until this window draws at its new
         // orientation.
-        if (!okToDisplay()) {
+        if (!okToDisplay() && mWindowsFreezingScreen != WINDOWS_FREEZING_SCREENS_TIMEOUT) {
             if (DEBUG_ORIENTATION) Slog.v(TAG, "Changing surface while display frozen: " + w);
             w.mOrientationChanging = true;
             w.mLastFreezeDuration = 0;
@@ -10053,6 +10081,7 @@ public class WindowManagerService extends IWindowManager.Stub
                         winAnimator.setAnimation(a);
                         winAnimator.mAnimDw = w.mLastFrame.left - w.mFrame.left;
                         winAnimator.mAnimDh = w.mLastFrame.top - w.mFrame.top;
+                        winAnimator.mAnimateMove = true;
 
                         //TODO (multidisplay): Accessibility supported only for the default display.
                         if (mAccessibilityController != null

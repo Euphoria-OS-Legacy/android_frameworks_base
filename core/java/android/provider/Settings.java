@@ -2291,12 +2291,6 @@ public final class Settings {
         public static final String VIBRATE_INPUT_DEVICES = "vibrate_input_devices";
 
         /**
-         * Empty volume.
-         * @hide
-         */
-        public static final String VOLUME_DEFAULT = "volume_default";
-
-        /**
          * Ringer volume. This is used internally, changing this value will not
          * change the volume. See AudioManager.
          */
@@ -3448,14 +3442,6 @@ public final class Settings {
         public static final String STATUS_BAR_SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
 
         /**
-         * Visibility of SIM icons of unpopulated SIM slots in MSIM mode
-         * 0: Hide unpopulated SIM icons
-         * 1: Show unpopulated SIM icons
-         * @hide
-         */
-        public static final String STATUS_BAR_MSIM_SHOW_EMPTY_ICONS = "status_bar_show_empty_sims";
-
-        /**
          * Status bar carrier label
          * 0: Hide
          * 1: Display on keyguard status bar
@@ -3504,12 +3490,6 @@ public final class Settings {
          * @hide
          */
         public static final String RECENTS_SHOW_SEARCH_BAR = "recents_show_search_bar";
-
-        /**
-         * Show mobile/wifi activity icons in statusbar bar
-         * @hide
-         */
-        public static final String STATUS_BAR_SHOW_DATA_ACTIVITY = "status_bar_show_data_activity";
 
         /**
          * Network traffic indicator, goes from least to greatest significant bitwise
@@ -3872,14 +3852,6 @@ public final class Settings {
         public static final String DOZE_AUTO_BRIGHTNESS = "doze_auto_brightness";
 
         /**
-
-         * Volume key controls ringtone or media sound stream
-         *
-         * @hide
-         */
-        public static final String VOLUME_KEYS_DEFAULT = "volume_keys_default";
-
-        /**
          * Force expanded notifications on all apps that support it.
          * @hide
          */
@@ -3897,6 +3869,32 @@ public final class Settings {
          * @hide
          */
         public static final String ALLOW_LIGHTS = "allow_lights";
+
+        /**
+         * The statusbar configuration to be used for its creation in SystemUI
+         * Fallback is the config_statusBarComponent value
+         * @hide
+         */
+        public static final String STATUSBAR_COMPONENT = "statusbar_component";
+
+        /**
+         * Volume key controls ringtone or media sound stream
+         * @hide
+         */
+        public static final String VOLUME_KEYS_CONTROL_RING_STREAM =
+                "volume_keys_control_ring_stream";
+
+        /**
+         * Whether to disable the torch when the screen turns off
+         * @hide
+         */
+        public static final String DISABLE_TORCH_ON_SCREEN_OFF = "disable_torch_on_screen_off";
+
+        /**
+         * Delay to disable the torch when the screen turns off
+         * @hide
+         */
+        public static final String DISABLE_TORCH_ON_SCREEN_OFF_DELAY = "disable_torch_on_screen_off_delay";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings

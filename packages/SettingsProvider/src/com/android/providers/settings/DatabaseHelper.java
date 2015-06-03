@@ -47,6 +47,7 @@ import android.provider.Settings.Global;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.android.internal.content.PackageHelper;
@@ -2614,8 +2615,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             loadIntegerSetting(stmt, Settings.System.POINTER_SPEED,
                     R.integer.def_pointer_speed);
 
-            loadStringSetting(stmt, Settings.System.TIME_12_24,
-                    R.string.def_time_format);
+            boolean is24Hour = DateFormat.is24HourFormatLocale(mContext);
+            String defaultTimeFormat = is24Hour ? "24" : "12";
+            loadSetting(stmt, Settings.System.TIME_12_24, defaultTimeFormat);
 
             loadStringSetting(stmt, Settings.System.DATE_FORMAT,
                     R.string.def_date_format);
@@ -2804,8 +2806,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             loadBooleanSetting(stmt, Settings.Secure.ADVANCED_MODE,
                     com.android.internal.R.bool.config_advancedSettingsMode);
 
+            loadBooleanSetting(stmt, Settings.Secure.SPELL_CHECKER_ENABLED,
+                    R.bool.def_spell_checker);
+
             loadDefaultThemeSettings(stmt);
             loadProtectedSmsSetting(stmt);
+
+            loadStringSetting(stmt, Settings.Secure.QS_TILES,
+                    com.android.internal.R.string.config_defaultQuickSettingsTiles);
         } finally {
             if (stmt != null) stmt.close();
         }

@@ -6518,13 +6518,11 @@
     <declare-styleable name="VolumePreference">
         <!-- Different audio stream types. -->
         <attr name="streamType">
-            <enum name="none" value="-1" />
             <enum name="voice" value="0" />
             <enum name="system" value="1" />
             <enum name="ring" value="2" />
             <enum name="music" value="3" />
             <enum name="alarm" value="4" />
-            <enum name="notification" value="5" />
         </attr>
     </declare-styleable>
 

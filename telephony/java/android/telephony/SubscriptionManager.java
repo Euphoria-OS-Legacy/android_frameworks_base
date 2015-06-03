@@ -1267,15 +1267,16 @@ public class SubscriptionManager {
      * {@hide}
      */
     public static int getSimStateForSubscriber(int subId) {
-        int simState;
+        int simState = TelephonyManager.SIM_STATE_UNKNOWN;
 
         try {
             ISub iSub = ISub.Stub.asInterface(ServiceManager.getService("isub"));
-            simState = iSub.getSimStateForSubscriber(subId);
+            if (iSub != null) {
+                simState = iSub.getSimStateForSubscriber(subId);
+            }
         } catch (RemoteException ex) {
             simState = TelephonyManager.SIM_STATE_UNKNOWN;
         }
-        logd("getSimStateForSubscriber: simState=" + simState + " subId=" + subId);
         return simState;
     }
 }

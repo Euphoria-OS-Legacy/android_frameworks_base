@@ -28,7 +28,7 @@ import android.util.EventLog;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.systemui.EventLogTags;
 import com.android.systemui.R;
@@ -46,7 +46,7 @@ public class PhoneStatusBarView extends PanelBar {
     private ScrimController mScrimController;
 
     private int mShowCarrierLabel;
-    private LinearLayout mCarrierLabel;
+    private TextView mCarrierLabel;
 
     private ContentObserver mObserver = new ContentObserver(new Handler()) {
         public void onChange(boolean selfChange, Uri uri) {
@@ -82,7 +82,7 @@ public class PhoneStatusBarView extends PanelBar {
 
     @Override
     public void onFinishInflate() {
-        mCarrierLabel = (LinearLayout) findViewById(R.id.statusbar_carrier_text);
+        mCarrierLabel = (TextView) findViewById(R.id.statusbar_carrier_text);
         updateVisibilities();
         mBarTransitions.init();
     }
