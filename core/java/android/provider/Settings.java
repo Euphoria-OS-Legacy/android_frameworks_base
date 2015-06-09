@@ -3464,6 +3464,12 @@ public final class Settings {
         public static final String DOUBLE_TAP_SLEEP_NAVBAR = "double_tap_sleep_navbar";
 
         /**
+         * Enable double tap gesture anywhere on the lock screen put device to sleep
+         * @hide
+         */
+        public static final String DOUBLE_TAP_SLEEP_ANYWHERE = "double_tap_sleep_anywhere";
+
+        /**
          * Boolean value on whether to show weather in the statusbar
          * @hide
          */
@@ -3895,6 +3901,12 @@ public final class Settings {
          * @hide
          */
         public static final String DISABLE_TORCH_ON_SCREEN_OFF_DELAY = "disable_torch_on_screen_off_delay";
+
+        /**
+         * Enable built in CAF task manager
+         * @hide
+         */
+        public static final String ENABLE_TASK_MANAGER = "enable_task_manager";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
