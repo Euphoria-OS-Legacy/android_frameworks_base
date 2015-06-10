@@ -2052,7 +2052,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mUserRotationAngles = Settings.System.getInt(resolver,
                     Settings.System.ACCELEROMETER_ROTATION_ANGLES, -1);
 
-            if (mDevForceNavbar) {
+            if (hasNavigationBar()) {
                 // Height of the navigation bar when presented horizontally at bottom *******
                 int navigationBarHeight = Settings.System.getIntForUser(mContext.getContentResolver(),
                         Settings.System.NAVIGATION_BAR_HEIGHT,
