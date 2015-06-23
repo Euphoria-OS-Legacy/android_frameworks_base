@@ -349,6 +349,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     // settings
     View mFlipSettingsView;
     private QSPanel mQSPanel;
+
+    private boolean mForceShowNavBar;
     private DevForceNavbarObserver mDevForceNavbarObserver;
 
     // task manager
@@ -636,10 +638,10 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         @Override
         public void update() {
-            boolean visible = Settings.Secure.getIntForUser(mContext.getContentResolver(),
+            mForceShowNavBar = Settings.Secure.getIntForUser(mContext.getContentResolver(),
                     Settings.Secure.DEV_FORCE_SHOW_NAVBAR, 0, UserHandle.USER_CURRENT) == 1;
 
-            if (visible) {
+            if (mForceShowNavBar) {
                 forceAddNavigationBar();
             } else {
                 removeNavigationBar();
@@ -1048,7 +1050,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                         return false;
                     }});
             }
-            if (!showNav) {
+            if (!mForceShowNavBar) {
                 mSearchPanelSwipeView = new SearchPanelSwipeView(mContext, this);
                 mWindowManager.addView(mSearchPanelSwipeView, mSearchPanelSwipeView.getGesturePanelLayoutParams());
                 updateSearchPanel();
