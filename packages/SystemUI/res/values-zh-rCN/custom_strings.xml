@@ -18,6 +18,7 @@
 */
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
     <!-- Content description of the data connection type HSPA+ for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
     <string name="accessibility_data_connection_HP">HSPA+</string>
 
@@ -27,12 +28,19 @@
 
     <!-- Quick settings -->
     <string name="quick_settings_battery_saver">电池节能</string>
-    <string name="quick_settings_battery_saver_off">关闭节电</string>
+    <string name="quick_settings_battery_saver_off">电池节能：关闭</string>
+    <string name="quick_settings_doze">主动显示</string>
+    <string name="quick_settings_doze_off">主动显示:关闭</string>
     <string name="quick_settings_brightness">亮度</string>
     <string name="quick_settings_expanded_desktop">扩展桌面</string>
     <string name="quick_settings_expanded_desktop_off">普通桌面</string>
     <string name="quick_settings_screen_off">关闭屏幕</string>
     <string name="quick_settings_screenshot">屏幕截图</string>
     <string name="quick_settings_sync">数据同步</string>
-    <string name="quick_settings_sync_off">关闭同步</string>
+    <string name="quick_settings_sync_off">数据同步：关闭</string>
+    <!-- Battery level for expanded quick settings [CHAR LIMIT=2] -->
+    <string name="battery_level_template"><xliff:g id="level" example="45">%d</xliff:g>%%</string>
+
+	<!-- Title shown in recents popup for showing app in floating mode -->
+	<string name="status_bar_recent_floating_item_title">悬浮模式</string>
 </resources>

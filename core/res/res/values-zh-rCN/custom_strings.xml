@@ -27,6 +27,9 @@
     <!-- label for screen record item in phone options dialog -->
     <string name="global_action_screen_record">屏幕录像</string>
 
+    <string name="silent_mode_priority">优先</string>
+    <string name="silent_mode_none">无</string>
+
     <!-- AOKP custom system animations -->
     <string name="animation_fade">消隐</string>
     <string name="animation_slide_right">右滑</string>
@@ -43,5 +46,12 @@
     <string name="animation_grow_shrink_left">伸展（左）</string>
     <string name="animation_grow_shrink_right">伸展（右）</string>
     <string name="action_null">空白</string>
+
+	<!-- Floating Window -->
+	<string name="floating_window_snap_top">往上靠</string>
+	<string name="floating_window_snap_bottom">往下靠</string>
+	<string name="floating_window_snap_left">往左靠</string>
+	<string name="floating_window_snap_right">往右靠</string>
+	<string name="floating_window_minimize">最小化</string>
 
 </resources>
