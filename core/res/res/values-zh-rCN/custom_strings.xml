@@ -27,6 +27,9 @@
     <!-- label for screen record item in phone options dialog -->
     <string name="global_action_screen_record">屏幕录像</string>
 
+    <string name="silent_mode_priority">优先</string>
+    <string name="silent_mode_none">无</string>
+
     <!-- AOKP custom system animations -->
     <string name="animation_fade">消隐</string>
     <string name="animation_slide_right">右滑</string>
