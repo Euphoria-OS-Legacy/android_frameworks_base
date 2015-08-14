@@ -61,6 +61,7 @@ import android.view.accessibility.AccessibilityManager;
 import com.android.systemui.R;
 import com.android.systemui.recents.AlternateRecentsComponent;
 import com.android.systemui.recents.Constants;
+import com.android.systemui.utils.LockAppUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -96,6 +97,7 @@ public class SystemServicesProxy {
     Paint mBgProtectionPaint;
     Canvas mBgProtectionCanvas;
 
+    Context ct;
     static {
         sBitmapOptions = new BitmapFactory.Options();
         sBitmapOptions.inMutable = true;
@@ -127,6 +129,7 @@ public class SystemServicesProxy {
         mBgProtectionPaint.setColor(0xFFffffff);
         mBgProtectionCanvas = new Canvas();
 
+        ct = context;
         // Resolve the assist intent
         Intent assist = mSm.getAssistIntent(context, false);
         if (assist != null) {
@@ -192,6 +195,7 @@ public class SystemServicesProxy {
 
         boolean isFirstValidTask = true;
         Iterator<ActivityManager.RecentTaskInfo> iter = tasks.iterator();
+        LockAppUtils.refreshLockAppMap();
         while (iter.hasNext()) {
             ActivityManager.RecentTaskInfo t = iter.next();
 
@@ -203,7 +207,9 @@ public class SystemServicesProxy {
             // tasks if it is not the first active task.
             boolean isExcluded = (t.baseIntent.getFlags() & Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
                     == Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS;
-            if (isExcluded && (isTopTaskHome || !isFirstValidTask)) {
+            String pkgName = t.baseIntent.getComponent().getPackageName();
+            boolean isLockedApp = LockAppUtils.isLockedApp(pkgName) ;
+            if (isExcluded && (isTopTaskHome || !isFirstValidTask || !isLockedApp)) {
                 iter.remove();
                 continue;
             }
